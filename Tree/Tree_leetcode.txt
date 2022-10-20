@@ -445,3 +445,1056 @@ int add(int val)
     if(pq.size()>size) pq.pop();
     return pq.top();
 }
+
+32) Closest Binary Search Tree Value
+void maxDiffUtil(Node* ptr,int k,int &min_dif,int &min_dif_key)
+{
+    if(ptr==NULL) return;
+    if(ptr->key==k)  
+    {
+        min_dif_key=k;
+        return;
+    }
+    if(min_dif>abs(ptr->key-k))
+    {
+        min_dif=abs(ptr->key-k);
+        min_dif_key=ptr->key;
+    }
+    if(k<ptr->key)
+    maxDiffUtil(ptr->left,k,min_dif,min_dif_key);
+    maxDiffUtil(ptr->right,k,min_dif,min_dif_key);
+}
+int minDiff(Node* root,int k)
+{
+    int min_dif=INT_MAX,min_dif_key=-1;
+    maxDiffUtil(root,k,min_dif,min_dif_key);
+    return min_dif_key;
+}
+
+33) Cousins in Binary Tree
+
+bool iscousins(TreeNode* root,int x,int y)
+{
+    queue<TreeNode*>q;
+    q.push(root);
+    unordered_map<int,int>mp;
+    while(!q.empty())
+    {
+        int n=q.size();
+        while(n--)
+        {
+            TreeNode* temp=q.front();
+            if(temp->left)
+            {
+                mp[temp->left->val]=temp->val; // Stores the parent of each node;
+                q.push(temp->left);
+            }
+            if(curr->right)
+            {
+                mp[temp->right->val]=temp->val;
+                q.push(temp->right);
+            }
+            if(mp.find(x)!=mp.end() and mp.find(y)!=mp.end( and mp[x]!=mp[y]))
+            return true;
+            mp.clear();
+        }
+        return false;
+    }
+}
+
+34) Symmetric Tree
+bool isSymmetrics(TreeNode* left,TreeNode* right)
+{
+    if(left==NULL and right==NULL) return true;
+    if(left==NULL or right==NULL or left->val!=right->val) return false;
+    return isSymmetrics(left->right,right->left)and isSymmetrics(left->right,right->left);
+}
+bool isSymmetrics(TreeNode* root)
+{
+    return isSymmetrics(root->left,root->right);
+}
+
+
+35) Find Mode in Binary Search  Tree
+map<int,int>mp;
+int mx=0;
+void dfs(TreeNode* root)
+{
+    if(root==NULL) return;
+    else
+    {
+        mp[root->val]++;
+        mx=max(mp[root->val],mx);
+    }
+    dfs(root->left);
+    dfs(root->right);
+}
+vector<int>findMode(TreeNode* root)
+{
+    vector<int>ans;
+    dfs(root);
+    for(auto it:mp)
+    {
+        if(mx==it.second)
+        ans.push_back(it.first);
+    }
+return ans;
+}
+
+36) Balanced Binary Tree
+bool checkBalanced(TreeNode* root,int &height)
+{
+    if(root==NULL) 
+    {
+        height=0;
+        return true;
+    }
+    int leftHeight=0,rightHeight=0;
+    if(!(checkBalanced(root->left,leftHeight) or !(checkBalanced(root->right,rightHeight)))) return false;
+    if(abs(leftHeight-rightHeight)>1) return false;
+    height=max(leftHeight,rightHeight)+1;
+    return true;
+}
+bool isBalanced(TreeNode* root)
+{
+    int height=0;
+    return checkBalanced(root,height);
+}
+37) Path Sum (path sum of equal to target)
+bool hasPathSum(TreeNode* root,int targetSum)
+{
+    if(root==NULL)
+    return false;
+    if(root->val==targetSum and root->left==NULL and root->right==NULL) return true;
+    return hasPathSum(root->left,targetSum-root->val) or hasPathSum(root->right,targetSum-root->val);
+}
+
+38) SubTree of Another Tree
+bool isSame(TreeNode* s,TreeNode* t)
+{
+    if(!s and !t) return true;
+    if(!s or !t or (s->val!=t->val)) return false;
+    return isSame(s->left,t->left)and isSame(s->right,t->right);
+}
+bool isSubTree(TreeNode* s,TreeNode* t)
+{
+    if(!s) return false;
+    if(isSame(s,t)) return false;
+    return isSubTree(s->left,t) or isSubTree(s->right,t);
+}
+
+39) Second Minimum Node in a Binary Tree
+set<int>s;
+void check(TreeNode*  root1)
+{
+    s.insert(root1->val);
+    if(root1->left) 
+    check(root1->left);
+    if(root1->right)
+    check(root1->right);
+}
+int findSecondMinimumValue(TreeNode* root)
+{
+    if(!root) return -1;
+    check(root);
+    if(s.size()<2)
+    {
+        return -1;
+    }
+    s.erase(s.begin());
+   return *s.begin();
+}
+
+40) Minimum Depth of Binary Tree
+
+int minDepth(TreeNode* root) {
+    if(root==NULL) return 0;
+    if(!root->left) return  1+minDepth(root->right);
+    if(!root->right) return 1+minDepth(root->left);
+    return 1+min(minDepth(root->left),minDepth(root->right));
+}
+
+41) Deepest Leaves Sum
+int deepestLeaversSum(TreeNode* root)
+{
+    queue<TreeNode*>q;
+    q.push(root);
+    int sum=0;
+    while(!q.empty())
+    {
+        int n=q.size();
+        sum=0;
+        while(n--)
+        {
+            TreeNode* node=q.front();q.pop();
+            if(node->left) q.push(node->left);
+            if(node->right)q.push(node->right);
+            sum+=node->val;
+        }
+    }
+    return sum;
+}
+
+42) Sum of Nodes with Even values Grandparent
+
+int fun(TreeNode* root)
+{
+    return root?root->val:0;
+}
+int sumEvenGrandparent(TreeNode* root)
+{
+    if(!root) return 0;
+    queue<TreeNode*>q;
+    q.push(root);
+    int sum=0;
+    while(!q.empty())
+    {
+        TreeNode* temp=q.front();
+        q.pop();
+        if(temp%2==0)
+        {
+            if(temp->left) sum+=fun(temp->left->left)+fun(temp->left->right);
+            if(temp->right)sum+=fun(temp->right->left)+fun(temp->right->right);
+        }
+        if(temp->left) q.push(temp->left);
+        if(temp->right)q.push(temp->right);
+    }
+    return sum;
+}
+43) Count Node Equals to Average of SubTree
+pair<int,int>solve(TreeNode* root,int &ans)
+{
+    if(!root) return {0,0};
+    auto p1=solve(root->left,ans);
+    auto p2=solve(root->right,ans);
+    int avg=(root->val+p1.first+p2.first)/(p1.second+p2.second+1);
+    if(avg==root->val) ans++;
+    return {root->val+p1.first+p2.first,p1.second+p2.second+1};
+}
+int averageOfSubtree(TreeNode* root) {
+    int ans=0;
+    solve(root,ans);
+    return ans;
+}
+
+44) Binary Search Tree To Greater Sum Tree
+void sum_nodes(TreeNode* node,int&acc_sum)
+{
+    if(node==NULL) return;
+    sum_node(node->right,acc_sum);
+    node->val+=acc_sum;
+    acc_sum=node->val;
+    acc_sum=node->val;
+    sum_node(node->left,acc_sum);
+}
+TreeNode* bstToGst(TreeNode* root)
+{
+    int acc_sum=0;
+    sum_node(root,acc_sum);
+    return root;
+}
+
+45) Maximum Binary Tree
+
+TreeNode* constructMaxmimumBinaryTree(vector<int>&nums)
+{
+    if(nums.size()==0) return NULL;
+    vector<int>l,r;
+    bool a=1;
+    int  mx=*max_element(nums.begin(),nums.end());
+    for(int i=0;i<nums.size();i++)
+    {
+        if(nums[i]==mx)
+        {
+            a=0;
+            continue;
+        }
+        if(a) l.push_back(nums[i]);
+        else r.push_back(nums[i]);
+    }
+    TreeNode* node=new TreeNode(mx);
+    node->left=constructMaxmimumBinaryTree(l);
+    node->right=constructMaxmimumBinaryTree(r);
+    nums.clear();
+    return node;
+}
+
+46) Clone N-ary Tree
+Node* cloneTree(TreeNode* root)
+{
+    if(!root) return root;
+    TreeNode* ret=new Node(root->val);
+    for(auto node:root->children)
+    {
+        ret->children.public(cloneTree(node));
+    }
+    return ret;
+}
+
+47) Design an Expression Tree with Evaluate with Evaluate Function
+
+int toInt(string s)
+{
+    int num=0;
+    if(s[0]!='-')
+    {
+        for(int i=0;i<s.size();i++) 
+        num=num*10+(int(s[i]-48));
+    }
+    else 
+    {
+        for(int i=1;i<s.size();i++)
+        {
+            num=num*10+(int(s[i]-48));
+        }
+        num=num-1;
+    }
+    return num;
+}
+int Evaluate(TreeNode* root)
+{
+    if(!root) return 0;
+    if(!root->left and !root->right) return toInt(root->data);
+    int l_val=Evaluate(root->left);
+    int r_val=Evaluate(root->right);
+    if(root->data=='+') return l_val+r_val;
+    if(root->data=='-') return l_val-r_val;
+    if(root->data=='*') return l_val*r_val;
+    if(root->data=='/') return l_val/r_val;
+}
+
+48) Construct Binary Tree from preOrder
+TreeNode* BSTInsert(TreeNode* &root,int val)
+{
+    if(!root) root=new TreeNode(val);
+    else {
+        if(val<root->val)
+            root->left=BSTInsert(root->left,val);
+        else if(root->val<val)
+            root->right=BSTInsert(root->right,val);
+    }
+    return root;
+}
+TreeNode* bstFromPreorder(vector<int>& preorder) {
+ TreeNode* root=NULL;
+    for(auto val:preorder) BSTInsert(root,val);
+    return root;
+}
+
+49) Balanced A Binary Tree
+
+vector<TreeNode*> inorder;
+void findInorder(TreeNode* root)
+{
+    if(root==NULL)
+        return;
+    findInorder(root->left);
+    inorder.push_back(root);
+    findInorder(root->right);
+}
+TreeNode* buildTree(int start,int end)
+{
+    if(start>end)
+        return NULL;
+    int mid=(start+end)/2;
+    TreeNode* root=inorder[mid];
+    root->left=buildTree(start,mid-1);
+    root->right=buildTree(mid+1,end);
+    return root;
+}
+TreeNode* balanceBST(TreeNode* root) 
+{
+    if(root==NULL)
+        return NULL;
+    findInorder(root);
+    int n=inorder.size();
+    root=buildTree(0,n-1);
+    return root;
+}
+
+50) Find Leaves of Binary Tree
+int getLeaves(vector<int>&temp, TreeNode* root){
+    if(root == nullptr) return 0;
+    int left = getLeaves(temp,root->left);
+    int right = getLeaves(temp,root->right);
+    if(left == 0 && right == 0){
+        temp.push_back(root->val);
+        return -1;
+    }
+    if(left == -1) root->left = nullptr;
+    if(right == -1) root->right = nullptr;
+    return 1;
+}
+vector<vector<int>> findLeaves(TreeNode* root) {
+    vector<vector<int>>res;
+    while(root && (root->left || root->right)){
+        vector<int>temp;
+        getLeaves(temp,root);
+        res.push_back(temp);
+    }
+    res.push_back({root->val});
+    return res;
+}
+
+51) All possible Full binary Tree
+
+52) All Element in two BST
+void inorder(TreeNode* root,vector<int>&ans)
+{
+    if(root==NULL) return;
+    inorder(root->left,ans);
+    ans.push_back(root->val);
+    inorder(root->right,ans);
+}
+vector<int> getAllElements(TreeNode* root1, TreeNode* root2) {
+    vector<int>ans;
+    inorder(root1,ans);
+    inorder(root2,ans);
+    sort(ans.begin(),ans.end());
+    return ans;
+}
+
+53) clone Binary Tree with Random pointer 
+
+map<Node*,Node*>m;
+Node* cloneTree(Node* tree)
+{
+    if(!tree) return NULL;
+    Node* root=new Node(tree->data);
+    m[tree]=root;
+    root->left=(m.count(tree->left))?m[tree->left]:cloneTree(tree->left);
+    root->right=(m.count(tree->right))?m[tree->right]:cloneTree(tree->right);
+    root->random=(m.count(tree->random))?m[tree->random]:cloneTree(tree->random);
+    return root;
+}
+
+54) Lowest Common Ancestor of a Binary Tree IV (IMP)
+
+TreeNode*  lowestCommonAncestor(TreeNode* root,const set<TreeNode*>&node_set)
+{
+    if(root==NULL) return NULL;
+    if(node_set.count(root)>0) return root;
+    TreeNode* l=lowestCommonAncestor(root->left,node_set);
+    TreeNode* r=lowestCommonAncestor(root->right,node_set);
+    if(l and r) return root;
+    return l?l:r;
+}
+TreeNode* lowestCommonAncestor(TreeNode* root,vector<TreeNode*>&node)
+{
+    set<TreeNode*>node_set(node.begin(),node.end());
+    return lowestCommonAncestor(root,node_set);
+}
+
+55) find Root of N-ary Tree
+
+Node* findRoot(vector<Node*>tree)
+{
+    int xor=0;
+    for(auto node:tree)
+    {
+        xor^=node->val;
+        for(auto it:node->children)
+        {
+            xor^=it->val;
+        }
+    }
+
+    for(Node* node:tree)
+    {
+        if(node->val==xor) return node;
+    }
+    return NULL;
+}
+
+56) Lowest Common Ancestor of a Binary Tree III
+
+Node :-
+class Node{
+    public:
+    int val 
+    Node* left,*right,*parent;
+}
+Code :-
+Node* lowestCommonAncestor(Node* p,Node* q)
+{
+    Node* a=p,*b=q;
+    while(a!=b)
+    [
+        a=(a==NULL)?q:a->parent;
+        b=(b==NULL)?p:b->parent;
+    ]
+}
+
+57) Find element in a contaiminated binary tree
+class FindElements {
+    unordered_set<int> set;
+public:
+    void recover(TreeNode* root, int x) {
+        if (!root) return;
+        root->val = x;
+        set.emplace(x);
+        recover(root->left, 2 * x + 1);
+        recover(root->right, 2 * x + 2);
+    }
+    
+    FindElements(TreeNode* root) {
+        recover(root, 0);
+    }
+    
+    bool find(int target) {
+        return set.count(target);
+    }
+};
+58) Reverse Odd Level of Binary Tree
+TreeNode* reverseOddLevels(TreeNode* root) {
+    if(root==NULL) return NULL;
+    queue<TreeNode*>q;
+    int level = 0;
+    q.push(root);
+    while(!q.empty())
+    {
+        int currentSize = q.size();
+        vector<TreeNode*>v;
+        for(int i=0;i<currentSize;i++)
+        {
+            TreeNode* temp = q.front();
+            if(temp->left) q.push(temp->left);
+            if(temp->right) q.push(temp->right);
+            q.pop();
+            v.push_back(temp);
+        }
+        if(level%2!=0)
+        {
+            int left, right;
+            left = 0;
+            right = v.size()-1;
+            while(left<right)
+            {
+                swap(v[left++]->val, v[right--]->val);
+            }
+        }
+        ++level;
+    }
+    return root;
+}
+59)  Find next right node of a given key
+Node* nextright(Node* root,int key)
+{
+    ir(root==NULL) return NULL;
+    Node* res=NUL;
+    queue<Node*>q;
+    q.push(root);
+    while(!q.empty())
+    {
+        int n=q.size();
+        for(int i=0;i<n;i++)
+        {
+            Node* temp=q.front();
+            q.pop();
+            if(temp->key==key) 
+            {
+                if(i!=n-1) return q.front();
+                else return NULL;
+            }
+            if(temp->left) q.push(temp->left);
+            if(temp->right)q.push(temp->right);
+        }
+    }
+    return NULL;
+}
+60) Pathh In Zigzag Labelled Binary Tree
+
+61) Delete Leaves With a given
+
+TreeNode* removeLeafNodes(TreeNode* root,int target)
+{
+    if(root->left)
+    {
+        TreeNode* lNode=removeLeafNodes(root->left,target);
+        root->left=lNode;
+    }
+    if(root->right)
+    {
+        TreeNode* rNode=removeLeafNodes(root->right,target);
+        root->right=rNode;
+    }
+    if(root->val==target and root->left==NULL and root->right==NULL)
+    {
+        return NULL;
+    }
+    return root;
+}
+62) Insert Into Binary Tree 
+TreeNode* insertIntoBST(TreeNode* root,int val)
+{
+    if(!root) 
+    {
+        TreeNode* newNode=new TreeNode(val);
+        return newNode;
+    }
+    if(val<root->val) root->left=insertIntoBST(root->left,val);
+    else root->right=insertIntoBST(root->right,val);
+    return root;
+}
+
+63) Count Good Nodes in Binary 
+int ans=0;
+void pre(TreeNode* root,int Max)
+{
+    if(!root) return;
+    if(root->val>=Max) ans++,Max=root->val;
+    pre(root->left,Max);
+    pre(root->right,Max);
+}
+int goodNodes(TreeNode* root)
+{
+    pre(root,INT_MIN);
+    return ans;
+}
+
+64) Maximum Differece between node and Ancestor
+int maxAncestorDiff(TreeNode* root,int mini=INT_MAX,int maxi=INT_MIN)
+{
+    if(!root) return (maxi-mini);
+    mini=min(mini,root->val),maxi=max(maxi,root->val);
+    return max(maxAncestorDiff(root->left,mini,maxmi),maxAncestorDiff(root->right,mimi,maxmi));
+}
+65) Diameter of N- Ary Tree
+int depth(Node* ptr)
+{
+   if(!ptr) return 0;
+   int mx=0;
+   for(auto it:ptr->children) 
+   {
+    mx=max(mx,depth(it));
+   }
+   return mx+1;
+}
+
+int dimeter(Node* ptr)
+{
+    if(!ptr) return 0;
+    int max1=0,max2=0;
+    for(auto it:ptr->children)
+    {
+        int h=depth(it);
+        if(h>max1)
+        {
+            max2=max1,max1=h;
+        }
+        else if(h>max2)
+        {
+            max2=h;
+        }
+    }
+    int maxChildDia=0;
+    for(auto it:ptr->children)
+    {
+        maxChildDia=max(maxChildDia,dimeter(it));
+    }
+    return max(max1+max2+1,maxChildDia);
+}
+
+66) Binary Tree pruning
+
+TreeNode* pruneTree(TreeNode* root)
+{
+    if(root) 
+    {
+        root->left=pruneTree(root->left);
+        root->right=pruneTree(root->left);
+        if(!root->left and !root->right and root->val==0) return NULL;
+    }
+    return rooot;
+}
+
+67) Check it's BST or Not
+bool isBST(Node* node)
+{
+    if(node==NULL) return true;
+    if((node->right and node->right->data<node->data) or(node->left and node->left->data>node->data) or (!isBST(node->left))or (!isBST(node->right)))
+    return false;
+    return true;
+}
+
+68)  Distribute Coins in binary tree
+
+69) Create binary Tree from descriptions
+
+TreeNode* createBinaryTree(vector<vector<int>>& des) 
+{
+    unordered_set<int> k; 
+    unordered_map<int, TreeNode*> bank;
+    
+    //Section 1
+    for(int i =0; i<des.size(); i++)
+    {
+        k.insert(des[i][0]);
+        k.insert(des[i][1]);
+        
+        if(bank.find(des[i][0]) == bank.end())
+        {
+            TreeNode *temp = new TreeNode(des[i][0]);
+            bank.insert({des[i][0], temp});
+        }
+        if(bank.find(des[i][1]) == bank.end())
+        {
+            TreeNode *temp = new TreeNode(des[i][1]);
+            bank.insert({des[i][1], temp});  
+        }
+        
+        if(des[i][2] == 0)
+            bank[des[i][0]]->right = bank[des[i][1]];
+        else
+            bank[des[i][0]]->left = bank[des[i][1]];
+    }
+    
+    //Section 2
+    for(int i =0; i<des.size(); i++)
+        k.erase(k.find(des[i][1]));
+    
+    return bank[*k.begin()];
+}
+70) Construct Tree from PreOrder and PostOrder
+int i = 0;
+TreeNode* help(vector<int>& pre, vector<int>& post,int start,int end){
+    //BAse Case
+    if(start>end) return NULL;
+    if(i>=pre.size()) return NULL;
+    int j =-1;
+    for(int k = start;k<=end;k++)
+        if(pre[i]==post[k]){
+            j=k;
+            break;
+        }
+    if(j==-1) return NULL;
+    i++;
+    TreeNode* root = new TreeNode(post[j]);
+    TreeNode* l = help(pre,post,start,j-1);
+    root->left=l;
+    TreeNode* r = help(pre,post,start,j-1);
+    root->right=r;
+    return root;
+}
+TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
+    return help(pre,post,0,post.size()-1);
+}
+
+71) Binary Search Tree Iterator II
+lass BSTIterator {
+    TreeNode dummyHead = new TreeNode(0);
+    TreeNode curr;
+
+    public BSTIterator(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<TreeNode>();
+        TreeNode prev = dummyHead, node = root;
+        while (node != null || !stack.isEmpty()) {
+            if (node != null) {
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack.pop();
+                TreeNode visitNode = new TreeNode(node.val);
+                prev.right = visitNode;
+                visitNode.left = prev;
+                prev = visitNode;
+                node = node.right;
+            }
+        }
+        curr = dummyHead;
+    }
+    
+    public boolean hasNext() {
+        return curr.right != null;
+    }
+    
+    public int next() {
+        curr = curr.right;
+        return curr.val;
+    }
+    
+    public boolean hasPrev() {
+        return curr.left != dummyHead && curr != dummyHead;
+    }
+    
+    public int prev() {
+        curr = curr.left;
+        return curr.val;
+    }
+}
+
+72) N-ary Tree Level Order Traversa
+vector<vector<int>> levelOrder(Node* root) {
+    vector<vector<int>>v;
+    queue<Node*>q;
+    if(root==NULL) return {};
+    q.push(root);
+    vector<vector<int>>ans;
+    while(!q.empty())
+    {
+        int x=q.size();
+        vector<int>v;
+        for(int i=0;i<x;i++)
+        {
+            auto temp=q.front();q.pop();
+              v.push_back(temp->val);
+            for(auto it:temp->children)
+            {
+                if(it)
+                {
+                    q.push(it);
+                }
+            }
+        }
+        ans.push_back(v);
+    }
+    return ans;
+}
+
+73) Lowest Commen Ancestor of Deepst Leaves
+
+int getDepth(TreeNode* root)
+{
+    if(!root) 
+    {
+        return 0;
+    }
+    return max(getDepth(root->left),getDepth(root->right)+1);
+}
+TreeNode* LcaDeepstLeaves(TreeNode* root)
+{
+    if(!root) return NULL;
+    int right_depth=getDepth(root->right);
+    int left_depth=getDepth(root->left);
+    if(right_depth==left_depth)
+    return root;
+    if(right_depth>left_depth)
+    return LcaDeepstLeaves(root->right);
+    else return LcaDeepstLeaves(root->left);
+}
+
+74) Check is Two Expression Trees are same of Not
+void dfs(Node* root,unordered_map<int>&count)
+{
+    if(!root) return ;
+    if(root->val!='+') count[root->val]++;
+    dfs(root->left,count);
+    dfs(root->right,count);
+}
+bool CheckEquivalennce(Node* root1,Node* root2)
+{
+    if(root1==root2) return NULL;
+    unordered_map<char,int>count1,count2;
+    dfs(root1,count1);
+    dfs(root2,count1);
+    return count1==count2;
+}
+
+75)  Change the Root of a Binary Tree
+
+76)  Kth Smallest Element in a BST
+priority_queue<int>q;
+int kthSmallest(TreeNode* root, int k) {
+    if(root==NULL) return 0;
+    kthSmallest(root->left,k);
+    q.push(root->val);
+    if(q.size()>k) q.pop();
+    kthSmallest(root->right,k);
+    return q.top();
+}
+77) Delete Node and return forest 
+unordered_set<int>delSet;
+vector<TreeNode*> result;
+Treenode* deleteNodes(TreeNode* root,TreeNode* parecent)
+{
+    if(root==NULL) return NULL;
+    auto curr=del.count(root->val)?NULL:root;
+    if(parent==NULL and curr1==NULL) result.push_back(root);
+    root->left=deleteNodes(root->left,current);
+    root->right=deleteNode(root->right,current);
+    return current;
+}
+vector<TreeNode*> delNodes(TreeNode* root,vector<int>&to_delete)
+{
+    delSet=unordered_set<int>(to_delete.begin(),to_delete.end());
+    deleteNodes(root,NULL);
+    return result;
+}
+
+78) Binary Search Tree Iterator
+class BSTIterator {
+    public:
+        stack<TreeNode*> s;
+        BSTIterator(TreeNode* root) {
+            partialInorder(root);
+        }
+        
+        void partialInorder(TreeNode* root){
+            while(root != NULL){
+                s.push(root);
+                root = root->left;
+            }
+        }
+        
+        int next() {
+            TreeNode* top = s.top();
+            s.pop();
+            partialInorder(top->right);
+            return top->val;
+        }
+        
+        bool hasNext() {
+            return !s.empty();
+        }
+    };
+
+79) Find distance in a Binary Tree
+
+int findDistance(TreeNode* root,int p,int q)
+{
+    if(p==q) return 0;
+    TreeNode* Ancestor=lowestCommonAncestor(root,p,q);
+    return GetDistance(Ancestor,p)+GetDistance(Ancestor,q);
+}
+
+TreeNode* lowestCommonAncestor(TreeNode* root,int p,int q)
+{
+    if(root==NULL) return NULL;
+    if(root->val==p or root->val==q) return root;
+    TreeNode* left=lowestCommonAncestor(root->left,p,q);
+    TreeNode* right=lowestCommonAncestor(root->right,p,q);
+    if(left!=NULL and right!=NULL) return root;
+    return left?left:right;
+}
+
+
+int GetDistance(TreNode* node,int val)
+{
+    if(node==NULL)
+    {
+        return -1;
+    }
+    if(node->val==val) return 0;
+    int left=GetDistance(root->left,val);
+    int right=GetDistance(root->right,val);
+    int subDistance=max(left,right);
+    return subDistance>=0?subDistance+1:-1;
+}
+
+80) Kill Process
+
+vector<int>killProcess(vector<int>&pid,vector<int>&ppid,int kill)
+{
+    vector<int>killed;
+    map<int,set<int>>children;
+    for(int i=0;i<pid.size();i++)
+    {
+        children[ppid[i]].insert(pid[i]);
+    }
+    killAll(kill,children,killed);
+    return killed;
+}
+void killAll(int pid,map<int,set<intt>>&children)
+{
+    killed.push_back(pid);
+    for(auto it:children[pid])
+    {
+        kill(it,children,killed);
+    }
+}
+
+81) Smallest Subtree with all depest Nodes
+int getDepth(TreNode* node)
+{
+    if(!node) return 0;
+    return 1+max(getDepth(node->left),getDepth(node->right));
+}
+TreeNode* SubtreewithAlldeepest(TreeNode* root)
+{
+    if(root==NULL) return NULL;
+    int left=getDepth(root->left);
+    int right=getDepth(root->right);
+    if(left==right) return root;
+    if(left>right) SubtreewithAlldeepest(root->left);
+    else SubtreewithAlldeepest(root->right);
+}
+
+82) Pseudo-Palindromic Paths in a Binary Tree
+83) Convert BST to Greater Tree
+int curr_sum=0;
+void traverl(TreeNode* root)
+{
+    if(!root) return;
+    if(root->right) traverl(root->right);
+    root->val=(curr_sum+=root->val);
+    if(root->left) traverl(root->left);
+}
+TreeNode* convertBST(TreeNode* root)
+{
+    traverl(root);
+    return root;
+}
+84) Flip Equivalent binary Tree
+bool helper_dfs(TreeNode* root1, TreeNode* root2)
+    {
+        if(root1==NULL && root2==NULL)
+            return true;
+        if(root1==NULL || root2==NULL)
+            return false;
+        if(root1->val!=root2->val)
+            return false;
+        
+        return (helper_dfs(root1->left,root2->left) && helper_dfs(root1->right,root2->right)) || (helper_dfs(root1->left,root2->right) && helper_dfs(root1->right,root2->left));
+    }
+ bool flipEquivDFS(TreeNode* root1, TreeNode* root2) {
+        return helper_dfs(root1,root2);
+}
+
+85)  Find Bottom Left Tree Value
+
+int findBottomLeftValue(TreeNode* root)
+{
+    if(root==NULL) return -1;
+    queue<TreeNode*>q;
+    q.push(root);
+    int k=root->val;
+    while(!q.empty())
+    {
+        int n=q.size();
+        for(int i=0;i<n;i++)
+        {
+            if(i==0)k=temp->val;
+            if(temp->left) q.push(temp->left);
+            if(temp->right)q.push(temp->right);
+        }
+    }
+    return k;
+}
+86) Trim a Binary Search Tree
+TreeNode* trimBST(TreeNode* root,int L,int R)
+{
+    if(!root) return root;
+    if(root->val>=L and root->val<=R)
+    {
+        root->left=trimBST(root->left,L,R);
+        root->right=trimBST(root->right,L,R);
+    }
+    if(root->val<L)
+    {
+        return trimBst(root->right,L,R);
+    }
+    else trimBST(root->left,L,R);
+}
+87)Construct Quad Tree
+88) Maxminum Binary Tree II
+TreeNode* insertIntoMaxTree(TreeNode* root,int val)
+{
+    if(root==NULL) return new TreeNode(val);
+    if(root->val<val) 
+    {
+        TreeNode* node=new TreeNode(val);
+        node->left=root;
+        return node;
+    }
+    root->right=insertIntoMaxTree(root->right,val); 
+}
