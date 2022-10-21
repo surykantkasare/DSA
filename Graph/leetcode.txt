@@ -1,0 +1,253 @@
+1) Find Center of Star Graph
+int findCenter(vector<vector<int>>&edges)
+{
+    map<int,int>mp;
+    int center=0;
+    for(int i=0;i<edges.size();i++)
+    {
+        mp[edges[i][0]]++;
+        mp[edges[i][1]]++;
+        if(mp[edges[i][0]]==edges.size()) center=edges[i][0];
+        if(mp[edges[i][1]]==edges.size())center=edges[i][1];
+
+    }
+    return center;
+}
+2) Find if path Exists in Graph
+
+bool vialPath(int n,int vetor<vector<int>>&edges,int start,int end)
+{
+    unorderd_map<int,vector<int>>graph;
+    for(auto e:edges)
+    {
+        graph[e[0]].push_back(e[1]);
+        graph[e[1]].push_back(e[0]);
+    }
+    vector<bool>vis(n,0);
+    queue<int>q;
+    q.push(start);
+    vis[start]=1;
+    while(!q.empty())
+    {
+        int curr=q.front();q.pop();
+        if(curr=end)
+        {
+            return 1;
+        }
+        for(auto it:graph[curr])
+        {
+            if(!vis[it])
+            {
+                vis[it]=1;
+                q.push(it);
+            }
+        }
+    }
+    return 0;
+}
+3) Find the Town Judge
+int findJudge(int n,vector<vector<int>>&trust)
+{
+    vector<int>in(n+1,0),out(n+1,0);
+    int m=trust.size();
+    for(int i=0;i<m;i++)
+    {
+        out[trust[i][0]]++;
+        in[trust[i][1]]++;
+    }
+    for(int i=1;i<=n;i++)
+    {
+        if(out[i]==0 and in[i]==n-1) return i;
+    }
+    return -1;
+}
+4) All Paths From Source to Target 
+
+vector<vector<int>>res;
+void dfs(vector<vector<int>>&garph,int vertex=0,vector<int>v={})
+{
+    v.push_back(vertex);
+    if(vertex==garph.size()-1)
+    {
+        return res.push_back(v);
+        return ;
+    }
+    for(auto it:graph[vertex])
+    dfs(garph,it,v);
+}
+vector<vector<int>>allpathsSourcesTarget(vector<vector<int>>&graph)
+{
+    dfs(garph,0,{});
+    return res;
+}
+
+5) Minimum Number of vertices to reach all nodes
+vector<int>findSmallestSetOfVErtices(int n,vector<vector<int>>&edges)
+{
+    vector<int>;
+    vector<int>(c,0);
+    for(int i=0;i<edges.size();i++)
+    {
+        c[edges[i][1]]++;
+    }
+    for(int i=0;i<n;i++)
+    {
+        if(c[i]==0) ans.push_back(i);
+    }
+    return ans;
+}
+6) keys and Rooms
+void dfs(vector<vector<int>>&rooms,vector<bool>&vis,int src)
+{
+    vis[src]=1;
+    for(auto it:rooms[src])
+    if(!vis[it])
+    dfs(rooms,vis,it);;
+}
+bool canVisitAllRooms(vector<vector<int>>&rooms)
+{
+    int n=rooms.size();
+    vector<bool>vis(n,false);
+    dfs(rooms,vis,0);
+    for(auto it:vis)
+    {
+        if(it==0) return 0;
+    }
+    return 1;
+}
+7) Regions Cut by Slashes
+int dir[4][2] = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+void dfs(vector<vector<int>>& g, int i, int j){
+    g[i][j]=0;
+    for(int d = 0; d<4; ++d){
+        int x = i + dir[d][0];
+        int y = j + dir[d][1];
+        if( x >= 0 && y >= 0 && x < g.size() && y < g.size() && g[x][y] == 1){
+            dfs(g,x, y);
+        }
+    }
+}
+int regionsBySlashes(vector<string>& grid) {
+    int n = grid.size();
+    vector<vector<int>> g(3*n, vector<int> (3*n, 1)); 
+    for(int i = 0; i < n; ++i){
+        for(int j = 0; j< n; ++j){
+            if(grid[i][j] == '\\'){
+               for(int k = 0; k < 3; ++k) g[3*i+k][3*j+k] = 0;
+            }
+            else if(grid[i][j] == '/'){
+               for(int k = 0; k < 3; ++k) g[3*i+k][3*j+ 2-k] = 0;
+            }
+        }
+    }
+    int count = 0;
+     
+    for(int i = 0; i < 3*n; ++i){
+        for(int j = 0; j < 3*n; ++j){
+            if( g[i][j] == 1){ 
+                count++;
+                dfs(g, i, j);
+            }
+        }
+    }
+    return count;
+}
+
+8) Number of pravices
+void dfs(vector<vector<int>> &isConnected, vector<int> &visited, int i){
+    for(int j = 0; j < isConnected.size(); j++){
+        if(isConnected[i][j] && !visited[j]){
+            visited[j] = 1;
+            dfs(isConnected, visited, j);
+        }
+    }
+}
+
+public:
+int findCircleNum(vector<vector<int>>& isConnected) {
+    vector<int> visited(isConnected.size());
+    
+    int resCount = 0;
+    for(int i = 0; i < isConnected.size(); i++){
+        if(!visited[i]){
+            dfs(isConnected, visited, i);
+            resCount++;
+        }
+    }
+    
+    return resCount;
+}
+9) Connected Components in an Undirected Graph
+Like - 8 number qustion
+10) Redundant Connection 
+    vector<int>parent;
+    int find_set(int v)
+    {
+        if(v==parent[v])
+        {
+            return v;
+        }
+        return parent[v]=find_set(parent[v]);
+    }
+    bool union_set(int a,int b)
+    {
+        a=find_set(a);
+        b=find_set(b);
+        if(a==b) return true;
+        parent[b]=a;
+        return false;
+    }
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n=edges.size();
+        for(int i=0;i<=n;i++)
+        {
+            parent.push_back(i);
+        }
+        for(auto edge:edges)
+        {
+            if(union_set(edge[0],edge[1]))
+            {
+                return {edge[0],edge[1]};
+            }
+        }
+        return {-1,-1};
+    }
+
+11) Paralel Courses
+public int minimumSemesters(int n,int realtions)
+{
+    vector<int>adj[n];
+    vector<int>ans;
+    vector<int>in(n,0);
+    for(auto it:realtions)
+    {
+        adj[it[0]].push_back(it[1]);
+        in[it[1]]++;
+    }
+    priority_queue<int,vector<int>,greater<int>()>q;
+    for(int i=0;i<=n;i++)
+    {
+        if(in[i]==0)q.push(i);
+    }
+    while(!q.empty())
+    {
+        int curr=q.top();q.pop();
+        ans.push_back(curr);
+        for(int it:adj[curr])
+        {
+            in[it]--;
+            if(in[it]==0) q.push(it);
+        }
+    }
+    if(ans.size()!=n-1) return -1
+    else return ans;
+}
+
+12) Reorder Routes to Make All Paths Lead to the City Zero
+13) Diameter of Binary Tree
+int DiameterOfBinaryTree(TreeNode* root)
+{
+    int d=0;
+    solve(roo,d);
+    return d;
+}
